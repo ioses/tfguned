@@ -112,6 +112,27 @@ export class BluetoothService {
       });
     });
   }
+
+
+  dataOutIn(): Observable<any> {
+    return Observable.create(observer => {
+      this.bluetoothSerial.isConnected().then((isConnected) => {
+        this.reader = from(this.bluetoothSerial.read()).pipe(mergeMap(() => {
+            return this.bluetoothSerial.subscribeRawData();
+          })).pipe(mergeMap(() => {
+            return this.bluetoothSerial.readUntil('\n');   // <= delimitador
+          }));
+        this.reader.subscribe(data => {
+          observer.next(data);
+        });
+      }, notConected => {
+        observer.next('BLUETOOTH.NOT_CONNECTED');
+        observer.complete();
+      });
+    });
+  }
+
+
   /**
    * Es un método que se puede llamar desde otras partes del código para intentar conectar con la
    * id del ultimo dispositivo bluetooth al que se allá conectado.

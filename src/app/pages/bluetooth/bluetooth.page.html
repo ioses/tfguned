@@ -38,7 +38,7 @@
       </ion-text>
     </ion-item>
   </ion-list>
-  <form (ngSubmit)="sendMessage();">
+  <form (ngSubmit)="sendMessage(message);">
     <ion-item>
       <ion-input type="text" [(ngModel)]="message" name="message"></ion-input>
     </ion-item>
@@ -55,6 +55,9 @@
       </ion-col>
     </ion-row>
   </form>
+  <ion-item>
+    <ion-input type="text" [(ngModel)]="textReceived" name="textReceived">text</ion-input>
+  </ion-item>
   <p *ngFor="let item of messages">{{ item }}</p>
   <div [hidden]="devices.length > 0 || showSpinner == true || isConnected" text-center>
     <p>{{ "BLUETOOTH.NOT_FOUND" | translate }}</p>

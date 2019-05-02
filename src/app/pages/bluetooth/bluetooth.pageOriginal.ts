@@ -18,7 +18,6 @@ export class BluetoothPage implements OnInit, OnDestroy {
   isConnected = false;
   message = '';
   messages = [];
-  textReceived ='';
 
   constructor(
     private toastCtrl: ToastController,
@@ -36,8 +35,7 @@ export class BluetoothPage implements OnInit, OnDestroy {
     this.bluetooth.storedConnection().then((connected) => {
       this.isConnected = true;
       this.showSpinner = false;
-      //Cambia de sendMessage('')
-      this.sendMessage('prueba');
+      this.sendMessage('nada');
     }, (fail) => {
       this.bluetooth.searchBluetooth().then((devices: Array<Object>) => {
         this.devices = devices;
@@ -150,45 +148,19 @@ export class BluetoothPage implements OnInit, OnDestroy {
       if (data !== 'BLUETOOTH.NOT_CONNECTED') {
         try {
           if (data) {
-            const entry = JSON.parse(data); //chequear los datos aqui y abajo
-            this.addLine(data);
-            this.textReceived=data;
+            const entry = JSON.parse(data);
+            this.addLine(message);
           }
         } catch (error) {
           console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
         }
-        this.presentToast(data); //aqui
-          this.addLine(data);
-          this.textReceived=data;
-         // this.message = '';
+        // this.presentToast(data);
+        this.message = '';
       } else {
         this.presentToast(this.translate.instant(data));
       }
     });
   }
-
-  receiveMessage(){
-    this.bluetooth.dataOutIn().subscribe(data => {
-      if(data !== 'BLUETOOTH.NOT_CONNECTED'){
-        try{
-          if(data){
-            const entry = JSON.parse(data);
-            this.addLine(data);
-            this.textReceived = data;
-          }
-        }catch (error){
-          console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
-        }
-        this.presentToast(data);
-        this.addLine(data);
-        this.textReceived = data;
-       // this.message='';
-      }else{
-        this.presentToast(this.translate.instant(data));
-      }
-    });
-  }
-
   /**
    * Recupera la información básica del servidor para las graficas de lineas.
    * @param message
