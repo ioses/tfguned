@@ -1,8 +1,8 @@
 {
-  "name": "ionic-bluetooth-serial-example",
+  "name": "TFG UNED",
   "version": "0.0.1",
-  "author": "Juan Lozoya",
-  "homepage": "https://lozoya.biz/",
+  "author": "Iñigo Oses",
+  "homepage": "https://ioses.biz/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
