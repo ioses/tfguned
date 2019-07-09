@@ -6,11 +6,13 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { StorageService } from './providers/providers';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
-export class AppComponent {
+export class MyApp {
+  //rootPage:any = LoginPage;
 
   constructor(
     private platform: Platform,

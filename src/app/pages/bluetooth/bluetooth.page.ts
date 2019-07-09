@@ -1,7 +1,11 @@
-import { BluetoothService, StorageService } from './../../providers/providers';
+import { BluetoothService, StorageService, FirebaseService } from './../../providers/providers';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+
+import * as firebase from 'firebase/app';
+
+
 /**
  * Esta clase proporciona al usuario la interfaz para manipular algunas opciones.
  * @author <a href="mailto:jlozoya1995@gmail.com">Juan Lozoya</a>
@@ -25,13 +29,19 @@ export class BluetoothPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private translate: TranslateService,
     private bluetooth: BluetoothService,
-    private storage: StorageService
+    private storage: StorageService,
+    private firebase: FirebaseService
   ) {
   }
   /**
    * Carga parte del contenido después de inicializar el componente.
    */
   ngOnInit() {
+
+    //Prueba para comprobar si funciona
+    this.addLine("test");
+ 
+ 
     this.showSpinner = true;
     this.bluetooth.storedConnection().then((connected) => {
       this.isConnected = true;
@@ -195,7 +205,15 @@ export class BluetoothPage implements OnInit, OnDestroy {
    */
   addLine(message) {
     this.messages.push(message);
+    //Ver que enviamos en el mensaje y descifrarlo para almacenar
+    this.firebase.post(23123, 123123, false);
   }
+
+  alert(){
+    //Se crea alerta porque hay movimiento extraño
+    this.sendMessage("p");
+  }
+
   /**
    * Presenta un cuadro de mensaje.
    * @param {string} text Mensaje a mostrar.

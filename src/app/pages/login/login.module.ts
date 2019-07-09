@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+
+import { IonicApp, IonicErrorHandler } from 'ionic-angular';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -19,8 +21,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginPageModule {}

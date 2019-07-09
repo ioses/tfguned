@@ -16,7 +16,7 @@ import { BluetoothPage } from './bluetooth.page';
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: BluetoothPage }]),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
   ],
   exports: [
     BluetoothPage,
