@@ -1,9 +1,8 @@
 import { BluetoothService, StorageService, FirebaseService } from './../../providers/providers';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
-import * as firebase from 'firebase/app';
 
 
 /**
@@ -27,6 +26,7 @@ export class BluetoothPage implements OnInit, OnDestroy {
   constructor(
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
+    private navCtrl: NavController,
     private translate: TranslateService,
     private bluetooth: BluetoothService,
     private storage: StorageService,
@@ -167,12 +167,12 @@ export class BluetoothPage implements OnInit, OnDestroy {
         } catch (error) {
           console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
         }
-        this.presentToast(data); //aqui
+   //     this.presentToast(data); //aqui
           this.addLine(data);
           this.textReceived=data;
          // this.message = '';
       } else {
-        this.presentToast(this.translate.instant(data));
+  //      this.presentToast(this.translate.instant(data));
       }
     });
   }
@@ -190,11 +190,12 @@ export class BluetoothPage implements OnInit, OnDestroy {
           console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
         }
         this.presentToast(data);
-        this.addLine(data);
-        this.textReceived = data;
+     //   this.addLine(data);
+     //   this.textReceived = data;
+        //PRueba
        // this.message='';
       }else{
-        this.presentToast(this.translate.instant(data));
+  //      this.presentToast(this.translate.instant(data));
       }
     });
   }
@@ -205,14 +206,27 @@ export class BluetoothPage implements OnInit, OnDestroy {
    */
   addLine(message) {
     this.messages.push(message);
+    this.presentToast("prueba"+message.toString());
     //Ver que enviamos en el mensaje y descifrarlo para almacenar
-    this.firebase.post(23123, 123123, false);
+/*
+    if(message!=""){
+      this.firebase.post(message, "testdesdefirebase", false);
+    }
+    */
   }
 
-  alert(){
-    //Se crea alerta porque hay movimiento extraño
-    this.sendMessage("p");
+  manual(){
+    if(this.isConnected){
+      this.navCtrl.navigateRoot("/manual");
+    }
   }
+
+  automatico(){
+    if(this.isConnected){
+      this.navCtrl.navigateRoot("/automatico");
+    }
+  }
+
 
   /**
    * Presenta un cuadro de mensaje.
@@ -221,7 +235,7 @@ export class BluetoothPage implements OnInit, OnDestroy {
   async presentToast(text: string) {
     const toast = await this.toastCtrl.create({
       message: text,
-      duration: 3000
+      duration: 1000
     });
     await toast.present();
   }

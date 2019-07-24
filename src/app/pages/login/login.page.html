@@ -1,18 +1,23 @@
 <ion-header>
+  <ion-navbar>
     <ion-title>
-      Feedly
+      Corrector postural
     </ion-title>
+  </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
   <ion-item text-center no-lines>
-    <ion-icon name="logo-rss" class="logo" color="light"></ion-icon>
+    <ion-label>
+    <ion-icon name="logo-rss" class="logo"></ion-icon>
+  </ion-label>
   </ion-item>
 
   <ion-item text-center no-lines>
-    <h1>Feedly</h1>
-    <h6>an app for continuous feed</h6>
+    <ion-label>
+      <h1>Corrector postural</h1>
+  </ion-label>
   </ion-item>
 
   <ion-grid style="width: 75%;">
@@ -26,14 +31,13 @@
       <ion-input type="password" placeholder="your password" [(ngModel)]="password"></ion-input>
     </ion-row>
 
-    <ion-row>
-      <button ion-button block round outline color="light"
-      style="margin-top: 20px;" (click)="login()">Login</button>
-    </ion-row>
-
 </ion-grid>
 
-<button ion-button block clear color="light" (click)="gotoSignup()">
+<ion-button expand="block" shape="round" clear color="red" (click)="login()" style="margin-top: 20px;">
+    LOGIN
+  </ion-button>
+
+<ion-button expand="block" clear color="red" shape="round" (click)="gotoSignup()" style="margin-top: 20px;">
   Don't have an account? Sign Up
-</button>
+</ion-button>
 </ion-content>

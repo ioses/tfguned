@@ -5,7 +5,9 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'bluetooth', loadChildren: './pages/bluetooth/bluetooth.module#BluetoothPageModule' },
   { path: 'signup', loadChildren: './pages/signup/signup.module#SignupPageModule' },
-  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' }
+  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
+  { path: 'manual', loadChildren: './manual/manual.module#ManualPageModule' },
+  { path: 'automatico', loadChildren: './automatico/automatico.module#AutomaticoPageModule' },
 //  { path: 'home', loadChildren: './home/home.module#HomePageModule' },
 ];
 

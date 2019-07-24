@@ -49,9 +49,9 @@
         </ion-button>
       </ion-col>
       <ion-col>
-        <button expand="block" type="submit" [disabled]="!isConnected">
+        <ion-button expand="block" shape="round" clear color="red" type="submit" [disabled]="!isConnected">
           {{ "SEND" | translate }}
-        </button>
+        </ion-button>
       </ion-col>
     </ion-row>
   </form>
@@ -62,8 +62,26 @@
   <div [hidden]="devices.length > 0 || showSpinner == true || isConnected" text-center>
     <p>{{ "BLUETOOTH.NOT_FOUND" | translate }}</p>
   </div>
+
+
   <ion-row>
-    <button ion-button block round outline color="light"
-    style="margin-top: 20px;" (click)="alert()">Alerta</button>
+    <ion-col>
+      <ion-button expand="block" shape="round" clear color="red" (click)="intermanual()" style="margin-top: 20px;">
+          INTERACCION MANUAL
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <ion-button expand="block" shape="round" clear color="red" (click)="interautomatica()" style="margin-top: 20px;">
+          INTERACCION AUTOMÁTICA
+      </ion-button>
+    </ion-col>
   </ion-row>
 </ion-content>
+
+
+
+
+

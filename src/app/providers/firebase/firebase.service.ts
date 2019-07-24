@@ -14,7 +14,8 @@ export class FirebaseService{
     }
 
     post(measure1, measure2, event_clicked){
-        firebase.firestore().collection("posts").add({
+        firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).add({
+        //  firebase.firestore().collection("posts").add({
           user: firebase.auth().currentUser.uid,
           created: firebase.firestore.FieldValue.serverTimestamp(),
           measure1: measure1,
