@@ -12,4 +12,6 @@ export class AutomaticoPage implements OnInit {
   ngOnInit() {
   }
 
+//Crear funcion que elija de manera automatizada la snesibilidad
+
 }
