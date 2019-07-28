@@ -27,17 +27,15 @@ export class ComunService{
     calibraSensores(data){
         let n=0;
         let p=0;
-        while (n<15){
-            n++;
+
             if(data!=""){
                this.splitCadena(data);
-                this.x1[n]=this.values[0];
-                this.y1[n]=this.values[1];
-                this.z1[n]=this.values[2];
-                this.x2[n]=this.values[3];
-                this.y2[n]=this.values[4];
-                this.z2[n]=this.values[5];
-            }
+                this.x1[0]=this.values[0];
+                this.y1[0]=this.values[1];
+                this.z1[0]=this.values[2];
+                this.x2[0]=this.values[3];
+                this.y2[0]=this.values[4];
+                this.z2[0]=this.values[5];
         }
 
         //MEdia de cada uno de los elementos
@@ -50,5 +48,7 @@ export class ComunService{
     }
 
     //Crear función que normalice los valores 
+
+
 
 }

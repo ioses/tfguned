@@ -215,19 +215,6 @@ export class BluetoothPage implements OnInit, OnDestroy {
     */
   }
 
-  manual(){
-    if(this.isConnected){
-      this.navCtrl.navigateRoot("/manual");
-    }
-  }
-
-  automatico(){
-    if(this.isConnected){
-      this.navCtrl.navigateRoot("/automatico");
-    }
-  }
-
-
   /**
    * Presenta un cuadro de mensaje.
    * @param {string} text Mensaje a mostrar.

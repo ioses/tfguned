@@ -30,6 +30,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { FirebaseService } from './providers/firebase/firebase.service';
 
+import { ComunService } from './providers/comun/comun.service';
+
 //import firebase from 'firebase';
 
 
@@ -97,6 +99,7 @@ firebase.firestore().settings({
     BluetoothService,
     StorageService,
     FirebaseService,
+    ComunService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ],

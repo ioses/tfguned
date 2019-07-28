@@ -28,7 +28,7 @@ export class LoginPage {
 
       this.presentToast("Welcome"+user.user.displayName);
 
-      this.navCtrl.navigateRoot('/bluetooth');
+      this.navCtrl.navigateRoot('/controles');
      
 
     }).catch((err)=>{
