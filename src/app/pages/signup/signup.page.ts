@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BluetoothService, StorageService, FirebaseService } from './../../providers/providers';
 //import { NavParams, AlertController } from 'ionic-angular';
 
 import { NavController, ToastController, AlertController, NavParams} from '@ionic/angular';
@@ -19,7 +20,8 @@ export class SignupPage {
   constructor(public navCtrl: NavController, 
              // public navParams: NavParams,
               public toastCtrl: ToastController,
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController,
+              public firebase: FirebaseService) {
   }
 
   signup(){
@@ -65,8 +67,11 @@ export class SignupPage {
         {
           text: "OK",
           handler: () =>{
-            //Navigate to the feeds page
-            this.navCtrl.navigateRoot('/bluetooth');
+            
+            //Crear un record para crear la tabla
+            this.firebase.postFirst();
+
+            this.navCtrl.navigateRoot('/controles');
           }
         }
       ]

@@ -2,6 +2,7 @@ import { BluetoothService, StorageService, FirebaseService, ComunService } from 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { send } from 'q';
 
 @Component({
   selector: 'app-automatico',
@@ -18,7 +19,11 @@ export class AutomaticoPage implements OnInit {
   textReceived ='';
   contadorCalibracion=0;
   calibra=false;
+  correctorAutomatico = false;
+  fin = false;
   arrayCalibra = [];
+  eventsFirebase = [];
+  event_number;
 
   constructor(
     private toastCtrl: ToastController,
@@ -200,23 +205,29 @@ export class AutomaticoPage implements OnInit {
    */
   addLine(message) {
 
-
-   // this.messages.push(message);
-    
-   //this.presentToast("prueba"+message.toString());
-    //Ver que enviamos en el mensaje y descifrarlo para almacenar
-
     if(message!=="" && this.calibra==true && this.contadorCalibracion<=15){
       this.arrayCalibra.push(message);
       this.contadorCalibracion+=1;
-      this.presentToast("Dentro de calibracion");
     }
 
-    if(this.contadorCalibracion==15){
+    if(this.contadorCalibracion==15 && this.calibra == true){
       //Funcion de envio de array calibracion
       this.sendMessage("g");
-      this.presentToast("Calibracion realizada");
+      this.comun.calibraSensores(this.arrayCalibra);
+      this.calibra = false;
+   
     }
+
+    if(message!=="" && this.correctorAutomatico==true){
+      this.comun.controlautomatico(message);
+
+    }
+
+    if(this.correctorAutomatico==false && this.fin==true){
+      this.sendMessage("g");
+      this.fin = false;
+    }
+
 /*
     if(message!=""){
       this.firebase.post(message, "testdesdefirebase", false);
@@ -243,7 +254,24 @@ export class AutomaticoPage implements OnInit {
     this.sendMessage("q");
   }
 
+  comienzoautomatico(){
+    this.correctorAutomatico = true;
+    this.sendMessage("q");
+  }
+
 //Crear funcion que elija de manera automatizada la sensibilidad
+
+
+  finautomatico(){
+    
+    this.correctorAutomatico=false;
+    this.fin = true;
+    this.sendMessage("g");
+    
+
+  // this.firebase.getEventNumber();
+
+  }
 
 
 }

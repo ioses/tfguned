@@ -1,3 +1,4 @@
+import { BluetoothService, StorageService, FirebaseService } from './../../providers/providers';
 import { Injectable } from '@angular/core';
 
 import * as firebase from 'firebase/app';
@@ -6,41 +7,103 @@ import { Measure } from '../models/measure';
 @Injectable()
 export class ComunService{
 
-    values=[];
+    private values=[];
+    private newRecord = false;
 
-    x1=[];
-    y1=[];
-    z1=[];
-    x2=[];
-    y2=[];
-    z2=[];
+    private x1ArrayCalibra=[];
+    private y1ArrayCalibra=[];
+    private z1ArrayCalibra=[];
+    private x2ArrayCalibra=[];
+    private y2ArrayCalibra=[];
+    private z2ArrayCalibra=[];
 
-    x1mean;
-    y1mean;
-    z1mean;
-    x2mean;
-    y2mean;
-    z2mean;
+    private x1calibrado=0;
+    private y1calibrado=0;
+    private z1calibrado=0;
+    private x2calibrado=0;
+    private y2calibrado=0;
+    private z2calibrado=0;
 
-    constructor(){}
+    x1=0;
+    y1=0;
+    z1=0;
+    x2=0;
+    y2=0;
+    z2=0;
 
-    calibraSensores(data){
-        let n=0;
-        let p=0;
+    constructor(    private firebase: FirebaseService
+        
+        ){
 
-            if(data!=""){
-               this.splitCadena(data);
-                this.x1[0]=this.values[0];
-                this.y1[0]=this.values[1];
-                this.z1[0]=this.values[2];
-                this.x2[0]=this.values[3];
-                this.y2[0]=this.values[4];
-                this.z2[0]=this.values[5];
+            this.newRecord = true;
+
         }
 
+    calibraSensores(ArrayCalibra){
+        let n=0;
+        let p=0;
+        this.x1ArrayCalibra=[];
+        this.y1ArrayCalibra=[];
+        this.z1ArrayCalibra=[];
+        this.x2ArrayCalibra=[];
+        this.y2ArrayCalibra=[];
+        this.z2ArrayCalibra=[];
+        
+          for(n=0;n<ArrayCalibra.length;n++){
+                this.splitCadena(ArrayCalibra[n]);
+                this.x1ArrayCalibra[n]=parseInt(this.values[0]);
+                this.y1ArrayCalibra[n]=parseInt(this.values[1]);
+                this.z1ArrayCalibra[n]=parseInt(this.values[2]);
+                this.x2ArrayCalibra[n]=parseInt(this.values[3]);
+                this.y2ArrayCalibra[n]=parseInt(this.values[4]);
+                this.z2ArrayCalibra[n]=parseInt(this.values[5]);  
+        }
         //MEdia de cada uno de los elementos
 
+        let sumax1 = this.x1ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.x1calibrado = Math.floor(sumax1/this.x1ArrayCalibra.length);
+        
+        let sumay1 = this.y1ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.y1calibrado = Math.floor(sumay1/this.y1ArrayCalibra.length);
+
+        let sumaz1 = this.z1ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.z1calibrado = Math.floor(sumaz1/this.z1ArrayCalibra.length);
+
+        let sumax2 = this.x2ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.x2calibrado = Math.floor(sumax2/this.x2ArrayCalibra.length);
+
+        let sumay2 = this.y2ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.y2calibrado = Math.floor(sumay2/this.y2ArrayCalibra.length);
+
+        let sumaz2 = this.z2ArrayCalibra.reduce((previous, current)=> current += previous);
+        this.z2calibrado = Math.floor(sumaz2/this.z2ArrayCalibra.length);
+        
+
     }
+
+    controlautomatico(data){
+        this.splitCadena(data);
+
+        this.x1=this.values[0]-(this.x1calibrado);
+        this.y1=this.values[1]-(this.y1calibrado);
+        this.z1=this.values[2]-(this.z1calibrado);
+        this.x2=this.values[3]-(this.x2calibrado);
+        this.y2=this.values[4]-(this.y2calibrado);
+        this.z2=this.values[5]-(this.z2calibrado);
+
+        //Pendiente la detección automática (por defecto siempre a false actualmente)
+
+        if (this.newRecord == true){
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, true);
+            this.newRecord = false;
+        }else{
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false);
+        }
+
+    }
+
+
+
 
 
     splitCadena(data){
