@@ -8,20 +8,22 @@ import { Measure } from '../models/measure';
 export class FirebaseService{
 
     public measure: Measure;
-    private event_number;
+    event_number;
+    event_number_1: number;
     events=[];
 
     constructor(){
         
     }
 
-    post(x1, y1, z1, x2, y2, z2, event_clicked, new_event){
+    post(x1, y1, z1, x2, y2, z2, event_clicked, textoControl, nuevaGrabacion, tipo){
 
-        if(new_event == true){
-          this.getEventNumber();
-          this.event_number=parseInt(this.event_number);
-          this.event_number++;
+        if(nuevaGrabacion == true){
+          this.event_number =0;
         }
+
+        this.event_number++;
+        
 
         firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).add({
           event_number: this.event_number,
@@ -31,9 +33,11 @@ export class FirebaseService{
           measure_x2: x2, 
           measure_y2: y2,
           measure_z2: z2,
+          title: textoControl,
           event_clicked: event_clicked,
           created: firebase.firestore.FieldValue.serverTimestamp(),
-          user: firebase.auth().currentUser.uid
+          user: firebase.auth().currentUser.uid,
+          tipo: tipo
 
         }).then((doc)=>{
           console.log(doc);
@@ -48,7 +52,7 @@ export class FirebaseService{
       postFirst(){
 
         firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).add({
-          event_number: 0,
+          event_number: 1,
           measure_x1: 0,
           measure_y1: 0, 
           measure_z1: 0,
@@ -104,6 +108,14 @@ export class FirebaseService{
           console.log(err)
         })
 
+      }
+
+      checkEventNumber(){
+        this.getEventNumber();
+        console.log("Event "+this.event_number);
+        this.event_number++;
+        this.event_number_1=this.event_number;
+        console.log("Event modi "+this.event_number_1);
       }
     
 }

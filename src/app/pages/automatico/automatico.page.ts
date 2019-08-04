@@ -2,7 +2,7 @@ import { BluetoothService, StorageService, FirebaseService, ComunService } from 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToastController, AlertController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { send } from 'q';
+
 
 @Component({
   selector: 'app-automatico',
@@ -11,19 +11,29 @@ import { send } from 'q';
 })
 export class AutomaticoPage implements OnInit {
 
+  //Conexion bluetooth
   devices: any[] = [];
   showSpinner = false;
   isConnected = false;
+
   message = '';
-  messages = [];
-  textReceived ='';
-  contadorCalibracion=0;
-  calibra=false;
+
+//Flags calibracion
+  private contadorCalibracion=0;
+  private flagCalibracionRealizada = false; 
+  private flagCalibracion=false;
+  
   correctorAutomatico = false;
-  fin = false;
+
+  //Envío de todos los datos para calibracion
   arrayCalibra = [];
-  eventsFirebase = [];
-  event_number;
+
+  //Flag indicador de comienzo de grabacion
+  flagComienzoGrabacion = false;
+
+  tituloGrabacion: string="";
+  private tituloGrabacionDisabled: boolean = false;
+  private muestraTexto: string="";
 
   constructor(
     private toastCtrl: ToastController,
@@ -38,14 +48,11 @@ export class AutomaticoPage implements OnInit {
 
   ngOnInit() {
 
- 
- 
     this.showSpinner = true;
     this.bluetooth.storedConnection().then((connected) => {
       this.isConnected = true;
       this.showSpinner = false;
-      //Cambia de sendMessage('')
-      this.sendMessage('prueba');
+
     }, (fail) => {
       this.bluetooth.searchBluetooth().then((devices: Array<Object>) => {
         this.devices = devices;
@@ -138,7 +145,7 @@ export class AutomaticoPage implements OnInit {
             text: this.translate.instant('ACCEPT'),
             handler: () => {
               this.bluetooth.deviceConnection(seleccion.id).then(success => {
-                this.sendMessage('nada');
+
                 this.isConnected = true;
                 this.presentToast(this.translate.instant(success));
               }, fail => {
@@ -162,21 +169,21 @@ export class AutomaticoPage implements OnInit {
           if (data) {
             const entry = JSON.parse(data); //chequear los datos aqui y abajo
            this.addLine(data);
-            this.textReceived=data;
+            
           }
         } catch (error) {
           console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
         }
-   //     this.presentToast(data); //aqui
+
          this.addLine(data);
-          this.textReceived=data;
-         // this.message = '';
+  
+
       } else {
-  //      this.presentToast(this.translate.instant(data));
+
       }
     });
   }
-
+/*
   receiveMessage(){
     this.bluetooth.dataOutIn().subscribe(data => {
       if(data !== 'BLUETOOTH.NOT_CONNECTED'){
@@ -184,92 +191,105 @@ export class AutomaticoPage implements OnInit {
           if(data){
             const entry = JSON.parse(data);
            this.addLine(data);
-            this.textReceived = data;
+
           }
         }catch (error){
           console.log(`[bluetooth-168]: ${JSON.stringify(error)}`);
         }
       //  this.presentToast(data);
         this.addLine(data);
-       this.textReceived = data;
+
 
       }else{
   //      this.presentToast(this.translate.instant(data));
       }
     });
   }
-
+*/
   /**
    * Recupera la información básica del servidor para las graficas de lineas.
    * @param message
    */
   addLine(message) {
 
-    if(message!=="" && this.calibra==true && this.contadorCalibracion<=15){
+    if(message!=="" && this.flagCalibracion==true && this.contadorCalibracion<=15){
       this.arrayCalibra.push(message);
       this.contadorCalibracion+=1;
+      this.flagCalibracionRealizada=false;
     }
 
-    if(this.contadorCalibracion==15 && this.calibra == true){
+    if(this.contadorCalibracion==15 && this.flagCalibracion == true){
       //Funcion de envio de array calibracion
       this.sendMessage("g");
       this.comun.calibraSensores(this.arrayCalibra);
-      this.calibra = false;
+      this.flagCalibracion = false;
+      this.muestraTexto="Calibración realizada con éxito";
+      this.contadorCalibracion=0;
+      this.flagCalibracionRealizada=true;
    
     }
 
     if(message!=="" && this.correctorAutomatico==true){
-      this.comun.controlautomatico(message);
+      this.comun.controlautomatico(message, this.flagComienzoGrabacion, this.tituloGrabacion);
+      this.flagComienzoGrabacion=false;
+      this.muestraTexto="Corrigiendo...";
+
+
+      if(this.comun.eventoAutomatico==true){
+        this.sendMessage("e");
+        this.muestraTexto="Envía evento";
+      }
 
     }
 
-    if(this.correctorAutomatico==false && this.fin==true){
-      this.sendMessage("g");
-      this.fin = false;
-    }
-
-/*
-    if(message!=""){
-      this.firebase.post(message, "testdesdefirebase", false);
-    }
- */   
   }
 
   /**
    * Presenta un cuadro de mensaje.
    * @param {string} text Mensaje a mostrar.
    */
+  
   async presentToast(text: string) {
+
     const toast = await this.toastCtrl.create({
       message: text,
       duration: 1000
     });
     await toast.present();
+  
   }
 
 
   //Funcion de calibracion
   calibracion(){
-    this.calibra = true;
+    this.flagCalibracion = true;
     this.sendMessage("q");
+    this.muestraTexto ="Calibrando...";
   }
 
   comienzoautomatico(){
     this.correctorAutomatico = true;
+    this.flagComienzoGrabacion = true;
+    //Asegurar que tiene texto 
     this.sendMessage("q");
+    this.tituloGrabacionDisabled = true;
+
   }
 
 //Crear funcion que elija de manera automatizada la sensibilidad
+  sensibilidadautomatico(){
+
+  }
 
 
   finautomatico(){
     
     this.correctorAutomatico=false;
-    this.fin = true;
     this.sendMessage("g");
+    this.tituloGrabacionDisabled = false;
+    this.muestraTexto="Grabación finalizada";
     
-
-  // this.firebase.getEventNumber();
+    //this.navCtrl.navigateRoot('/resumenGrabacion');
 
   }
 

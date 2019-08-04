@@ -1,5 +1,6 @@
 import { BluetoothService, StorageService, FirebaseService } from './../../providers/providers';
 import { Injectable } from '@angular/core';
+import { ToastController, AlertController, NavController } from '@ionic/angular';
 
 import * as firebase from 'firebase/app';
 import { Measure } from '../models/measure';
@@ -24,20 +25,26 @@ export class ComunService{
     private y2calibrado=0;
     private z2calibrado=0;
 
-    x1=0;
-    y1=0;
-    z1=0;
-    x2=0;
-    y2=0;
-    z2=0;
+    private x1=0;
+    private y1=0;
+    private z1=0;
+    private x2=0;
+    private y2=0;
+    private z2=0;
 
-    constructor(    private firebase: FirebaseService
-        
+    eventoAutomatico = false;
+    contadorEventosAutomaticos = 0;
+
+    constructor(    
+            private firebase: FirebaseService,
+            private toastCtrl: ToastController,
+            private bluetooth: BluetoothService
         ){
 
             this.newRecord = true;
 
         }
+        
 
     calibraSensores(ArrayCalibra){
         let n=0;
@@ -81,7 +88,8 @@ export class ComunService{
 
     }
 
-    controlautomatico(data){
+    //Añadir entrada para sensibilidad de deteccion automática
+    controlautomatico(data, nuevaGrabacion, textoControl){
         this.splitCadena(data);
 
         this.x1=this.values[0]-(this.x1calibrado);
@@ -91,27 +99,73 @@ export class ComunService{
         this.y2=this.values[4]-(this.y2calibrado);
         this.z2=this.values[5]-(this.z2calibrado);
 
-        //Pendiente la detección automática (por defecto siempre a false actualmente)
 
-        if (this.newRecord == true){
-            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, true);
-            this.newRecord = false;
+        if( this.x1 > 5 || this.x1<-5 ||
+            this.y1 > 5 || this.y1<-5 ||
+            this.z1 > 5 || this.z1<-5 ||
+            this.x2 > 5 || this.x2<-5 ||
+            this.y2 > 5 || this.y2<-5 ||
+            this.z2 > 5 || this.z2<-5 ){
+                this.eventoAutomatico=true;
+        } 
+
+        if (nuevaGrabacion == true){
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, true, "automatico");
+
         }else{
-            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false);
+            if(this.eventoAutomatico == true && this.contadorEventosAutomaticos ==3){
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, textoControl, false, "automatico");
+                this.contadorEventosAutomaticos=0;
+                this.eventoAutomatico=false;
+                
+            }else{
+                if(this.eventoAutomatico == true && this.contadorEventosAutomaticos<3){
+                   this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "automatico");
+                    this.contadorEventosAutomaticos++;
+                }else{
+                    this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "automatico");
+                    this.eventoAutomatico=false;
+
+                }
+            }
         }
 
     }
 
+    
+    controlmanual(data, evento, nuevaGrabacion, textoControl){
+        this.splitCadena(data);
 
+        this.x1=this.values[0]-(this.x1calibrado);
+        this.y1=this.values[1]-(this.y1calibrado);
+        this.z1=this.values[2]-(this.z1calibrado);
+        this.x2=this.values[3]-(this.x2calibrado);
+        this.y2=this.values[4]-(this.y2calibrado);
+        this.z2=this.values[5]-(this.z2calibrado);
+
+
+        if (nuevaGrabacion == true){
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, true, "manual");
+           // this.newRecord = false;
+        }else{
+            if(evento == true){
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, textoControl, false, "manual");
+            }else{
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "manual");
+            }
+            
+        }
+
+    }
+
+    getEventoAutomatico(){
+        return this.eventoAutomatico;
+    }
 
 
 
     splitCadena(data){
         this.values=data.split(',');
     }
-
-    //Crear función que normalice los valores 
-
-
 
 }
