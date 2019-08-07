@@ -24,6 +24,10 @@ export class ControlesPage implements OnInit {
     this.navCtrl.navigateRoot("/automatico");
   }
 
+  datosusuario(){
+    this.navCtrl.navigateRoot("/usuario");
+  }
+
   
 
 }

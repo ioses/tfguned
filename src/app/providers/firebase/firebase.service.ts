@@ -10,7 +10,13 @@ export class FirebaseService{
     public measure: Measure;
     event_number;
     event_number_1: number;
-    events=[];
+    events: any []=[];
+    titles =[];
+
+    name: string;
+    surname: string;
+    level: string;
+    instrument: string;
 
     constructor(){
         
@@ -33,7 +39,7 @@ export class FirebaseService{
           measure_x2: x2, 
           measure_y2: y2,
           measure_z2: z2,
-          title: textoControl,
+          title: "_"+textoControl,
           event_clicked: event_clicked,
           created: firebase.firestore.FieldValue.serverTimestamp(),
           user: firebase.auth().currentUser.uid,
@@ -49,7 +55,84 @@ export class FirebaseService{
         })
       }
 
+      postUser(name, surname, level, instrument){
+        
+        firebase.firestore().collection("users").where("user", "==", firebase.auth().currentUser.uid).get()
+          .then(function(querySnapshot){
+            querySnapshot.forEach(function(doc){
+              firebase.firestore().collection("users").doc(doc.id).update({
+                date: firebase.firestore.FieldValue.serverTimestamp(),
+                name: name,
+                surname: surname,
+                level: level,
+                instrument: instrument
+              });
+            });
+          })
+
+
+/*
+
+        firebase.firestore().collection("users").add({
+          user: firebase.auth().currentUser.uid,
+          date: firebase.firestore.FieldValue.serverTimestamp(),
+          name: name,
+          surname: surname,
+          level: level,
+          instrument: instrument
+        }).then((doc)=>{
+          console.log(doc);
+        }).catch((err)=>{
+          console.log(err);
+        })
+        */
+      }
+
+      getUser(){
+        let query = firebase.firestore().collection("users").where('user','==',firebase.auth().currentUser.uid.toString()).limit(1);
+
+     
+    
+        query.get().then((docs)=>{
+        docs.forEach((doc)=>{
+
+          this.name = JSON.stringify(doc.data().name);
+          this.surname = JSON.stringify(doc.data().surname);
+          this.level = JSON.stringify(doc.data().level);
+          this.instrument = JSON.stringify(doc.data().instrument);
+
+            console.log("getUser: "+this.instrument);
+        })
+        
+
+      }).catch((err)=>{
+        console.log(err)
+      })
+
+
+      }
+
+      postUserFirst(nick){
+        
+        firebase.firestore().collection("users").add({
+          user: firebase.auth().currentUser.uid,
+          date: firebase.firestore.FieldValue.serverTimestamp(),
+          nick: nick,
+          name:"",
+          surname: "",
+          level: "",
+          instrument: ""
+        }).then((doc)=>{
+          console.log(doc);
+        }).catch((err)=>{
+          console.log(err);
+        })
+      }
+
+    
+
       postFirst(){
+      
 
         firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).add({
           event_number: 1,
@@ -71,51 +154,63 @@ export class FirebaseService{
           console.log(err);
         })
       }
-
-
-
-      getEventNumber(){
+/*
+      getUltimaGrabacion(title){
         
         this.events = []
-        let query = firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).orderBy("event_number","desc").limit(1);
+        //let query = firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).orderBy("event_number","desc").limit(1);
     
-          query.onSnapshot((snapshot)=>{
-            let changedDocs = snapshot.docChanges();
-    
-            changedDocs.forEach((change)=>{
-              if(change.type == "added"){
-    
-              }
-    
-              if(change.type == "modified"){
-                
-              }
-    
-              if(change.type == "removed"){
-                
-              }
-            })
-          })
+        let query = firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).where('title','==',"_"+title);
+
+     
     
           query.get().then((docs)=>{
           docs.forEach((doc)=>{
-            this.event_number= doc.data().event_number;
+            this.events.push(doc);
               
           })
+          
+
+        }).catch((err)=>{
+          console.log(err)
+        })
+
+        return this.events;
+
+      }
+*/
+      getTitles(){
+        this.titles = []
+       // let query = firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).orderBy("event_number","desc").limit(1);
     
-          console.log("Numero "+this.event_number);
+        let query = firebase.firestore().collection(firebase.auth().currentUser.uid.toString()).orderBy("title","desc");
+
+
+          query.get().then((docs)=>{
+          docs.forEach((doc)=>{
+
+            console.log("DOC: "+doc);
+            var title = JSON.stringify(doc.data().title);
+            console.log("Titulo: "+title+"Tipo: "+typeof(title));
+            this.titles.push(title);
+
+          })
+    
+              
+        let n=0;
+        for (n=0; n<this.titles.length;n++){
+          console.log("Dentro si: "+this.titles[n]);
+        }
+
+
+        console.log("Longitud: "+this.titles.length);
+
         }).catch((err)=>{
           console.log(err)
         })
 
       }
 
-      checkEventNumber(){
-        this.getEventNumber();
-        console.log("Event "+this.event_number);
-        this.event_number++;
-        this.event_number_1=this.event_number;
-        console.log("Event modi "+this.event_number_1);
-      }
+      
     
 }

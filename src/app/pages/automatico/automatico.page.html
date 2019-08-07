@@ -73,9 +73,24 @@
   </ion-row>
 
   <ion-input type="text" placeholder="Nombre..." [(ngModel)]="tituloGrabacion" [disabled]="tituloGrabacionDisabled && !flagCalibracionRealizada"></ion-input>
-
-  <ion-input type="text" placeholder="Aqui ira un select de sensibilidad" [(ngModel)]="sensibilidadAutomatico" [disabled]="tituloGrabacionDisabled && !flagCalibracionRealizada"></ion-input>
-
+  <ion-row>
+    <ion-col>
+        <ion-button expand="block" shape="round" clear color="red" (click)="sensibilidad(1)" style="margin-top: 20px;">
+            ALTA
+        </ion-button>
+    </ion-col>
+    <ion-col>
+        <ion-button expand="block" shape="round" clear color="red" (click)="sensibilidad(2)" style="margin-top: 20px;">
+            MEDIA
+        </ion-button>
+    </ion-col>
+    <ion-col>
+        <ion-button expand="block" shape="round" clear color="red" (click)="sensibilidad(3)" style="margin-top: 20px;">
+            BAJA
+        </ion-button>
+    </ion-col>
+  
+  </ion-row>
   <ion-row>
     <ion-col>
       <ion-button expand="block" shape="round" clear color="red" (click) = "comienzoautomatico()" 

@@ -271,7 +271,7 @@ export class ManualPage implements OnInit {
     this.tituloGrabacionDisabled = false;
     this.muestraTexto="Grabación finalizada";
     
-    //this.navCtrl.navigateRoot('/resumenGrabacion');
+  //  this.navCtrl.navigateRoot('/resultados');
 
   }
 

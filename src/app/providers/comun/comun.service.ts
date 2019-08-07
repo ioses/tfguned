@@ -10,6 +10,7 @@ export class ComunService{
 
     private values=[];
     private newRecord = false;
+    private tituloGrabacion;
 
     private x1ArrayCalibra=[];
     private y1ArrayCalibra=[];
@@ -89,7 +90,7 @@ export class ComunService{
     }
 
     //Añadir entrada para sensibilidad de deteccion automática
-    controlautomatico(data, nuevaGrabacion, textoControl){
+    controlautomatico(data, nuevaGrabacion, textoControl,sensibilidad){
         this.splitCadena(data);
 
         this.x1=this.values[0]-(this.x1calibrado);
@@ -100,12 +101,12 @@ export class ComunService{
         this.z2=this.values[5]-(this.z2calibrado);
 
 
-        if( this.x1 > 5 || this.x1<-5 ||
-            this.y1 > 5 || this.y1<-5 ||
-            this.z1 > 5 || this.z1<-5 ||
-            this.x2 > 5 || this.x2<-5 ||
-            this.y2 > 5 || this.y2<-5 ||
-            this.z2 > 5 || this.z2<-5 ){
+        if( this.x1 > sensibilidad || this.x1<-(sensibilidad) ||
+            this.y1 > sensibilidad || this.y1<-(sensibilidad) ||
+            this.z1 > sensibilidad || this.z1<-(sensibilidad) ||
+            this.x2 > sensibilidad || this.x2<-(sensibilidad) ||
+            this.y2 > sensibilidad || this.y2<-(sensibilidad) ||
+            this.z2 > sensibilidad || this.z2<-(sensibilidad) ){
                 this.eventoAutomatico=true;
         } 
 
@@ -129,6 +130,7 @@ export class ComunService{
                 }
             }
         }
+        this.tituloGrabacion = textoControl;
 
     }
 
@@ -166,6 +168,10 @@ export class ComunService{
 
     splitCadena(data){
         this.values=data.split(',');
+    }
+
+    getEventTitle(){
+        return this.tituloGrabacion;
     }
 
 }

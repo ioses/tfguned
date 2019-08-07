@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid style="width: 75%;">
+
+        <ion-button expand="block" shape="round" clear color="red" (click)="getUserData()" style="margin-top: 20px;">
+            Carga datos de usuario
+          </ion-button>
+        <ion-row class="rowStyle">
+          <ion-icon name="name" color="danger"></ion-icon>
+          <ion-input type="text" placeholder="your name" [(ngModel)]="name"></ion-input>
+        </ion-row>
+    
+        <ion-row class="rowStyle">
+          <ion-icon name="surname" color="danger"></ion-icon>
+          <ion-input type="text" placeholder="your surname" [(ngModel)]="surname"></ion-input>
+        </ion-row>
+
+        <ion-row class="rowStyle">
+            <ion-icon name="level" color="danger"></ion-icon>
+            <ion-input type="text" placeholder="your level" [(ngModel)]="level"></ion-input>
+          </ion-row>
+
+          <ion-row class="rowStyle">
+              <ion-icon name="instrument" color="danger"></ion-icon>
+              <ion-input type="text" placeholder="your instrument" [(ngModel)]="instrument"></ion-input>
+            </ion-row>
+    
+    </ion-grid>
+
+    <ion-button expand="block" shape="round" clear color="red" (click)="sendData()" style="margin-top: 20px;">
+        ENVIAR DATOS
+      </ion-button>
+
+</ion-content>

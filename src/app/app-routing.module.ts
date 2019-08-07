@@ -9,8 +9,9 @@ const routes: Routes = [
   { path: 'manual', loadChildren: './pages/manual/manual.module#ManualPageModule' },
   { path: 'automatico', loadChildren: './pages/automatico/automatico.module#AutomaticoPageModule' },
   { path: 'controles', loadChildren: './pages/controles/controles.module#ControlesPageModule' },
-  { path: 'resultados', loadChildren: './resultados/resultados.module#ResultadosPageModule' },
-  { path: 'historicos', loadChildren: './historicos/historicos.module#HistoricosPageModule' },
+  { path: 'resultados', loadChildren: './pages/resultados/resultados.module#ResultadosPageModule' },
+  { path: 'historicos', loadChildren: './pages/historicos/historicos.module#HistoricosPageModule' },
+  { path: 'usuario', loadChildren: './pages/usuario/usuario.module#UsuarioPageModule' },
 //  { path: 'home', loadChildren: './home/home.module#HomePageModule' },
 ];
 

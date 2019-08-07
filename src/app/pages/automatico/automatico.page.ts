@@ -35,6 +35,8 @@ export class AutomaticoPage implements OnInit {
   private tituloGrabacionDisabled: boolean = false;
   private muestraTexto: string="";
 
+  private gradoSensibilidad=50;
+
   constructor(
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
@@ -230,7 +232,7 @@ export class AutomaticoPage implements OnInit {
     }
 
     if(message!=="" && this.correctorAutomatico==true){
-      this.comun.controlautomatico(message, this.flagComienzoGrabacion, this.tituloGrabacion);
+      this.comun.controlautomatico(message, this.flagComienzoGrabacion, this.tituloGrabacion,this.gradoSensibilidad);
       this.flagComienzoGrabacion=false;
       this.muestraTexto="Corrigiendo...";
 
@@ -277,8 +279,14 @@ export class AutomaticoPage implements OnInit {
   }
 
 //Crear funcion que elija de manera automatizada la sensibilidad
-  sensibilidadautomatico(){
-
+  sensibilidad(grado){
+    if(grado==1){
+      this.gradoSensibilidad=10;
+    }else if(grado==2){
+      this.gradoSensibilidad=25;
+    }else{
+      this.gradoSensibilidad=50;
+    }
   }
 
 
@@ -289,7 +297,7 @@ export class AutomaticoPage implements OnInit {
     this.tituloGrabacionDisabled = false;
     this.muestraTexto="Grabación finalizada";
     
-    //this.navCtrl.navigateRoot('/resumenGrabacion');
+  //  this.navCtrl.navigateRoot('/resultados');
 
   }
 

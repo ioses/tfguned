@@ -70,6 +70,7 @@ export class SignupPage {
             
             //Crear un record para crear la tabla
             this.firebase.postFirst();
+            this.firebase.postUserFirst(this.name);
 
             this.navCtrl.navigateRoot('/controles');
           }
