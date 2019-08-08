@@ -237,9 +237,12 @@ export class AutomaticoPage implements OnInit {
       this.muestraTexto="Corrigiendo...";
 
 
-      if(this.comun.eventoAutomatico==true){
-        this.sendMessage("e");
-        this.muestraTexto="Envía evento";
+      if(this.comun.eventoDerecha==true){
+        this.sendMessage("d");
+        this.muestraTexto="Envía evento derecha";
+      }else if(this.comun.eventoIzquierda==true){
+        this.sendMessage("i");
+        this.muestraTexto="Envia evento izquierda";
       }
 
     }

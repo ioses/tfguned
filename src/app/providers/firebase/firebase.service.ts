@@ -22,7 +22,7 @@ export class FirebaseService{
         
     }
 
-    post(x1, y1, z1, x2, y2, z2, event_clicked, textoControl, nuevaGrabacion, tipo){
+    post(x1, y1, z1, x2, y2, z2, eventIzquierda, eventDerecha, textoControl, nuevaGrabacion, tipo){
 
         if(nuevaGrabacion == true){
           this.event_number =0;
@@ -40,7 +40,8 @@ export class FirebaseService{
           measure_y2: y2,
           measure_z2: z2,
           title: "_"+textoControl,
-          event_clicked: event_clicked,
+          event_izquierda: eventIzquierda,
+          event_derecha: eventDerecha,
           created: firebase.firestore.FieldValue.serverTimestamp(),
           user: firebase.auth().currentUser.uid,
           tipo: tipo
@@ -142,7 +143,8 @@ export class FirebaseService{
           measure_x2: 0, 
           measure_y2: 0,
           measure_z2: 0,
-          event_clicked: false,
+          event_izquierda: false,
+          event_derecha: false,
           created: firebase.firestore.FieldValue.serverTimestamp(),
           user: firebase.auth().currentUser.uid
 

@@ -23,6 +23,8 @@ export class ManualPage implements OnInit {
    private flagCalibracion=false;
    
    correctorAutomatico = false;
+   eventoIzquierda = false;
+   eventoDerecha = false;
  
    //Envío de todos los datos para calibracion
    arrayCalibra = [];
@@ -213,11 +215,17 @@ export class ManualPage implements OnInit {
     }
 
     if(message!=="" && this.correctorAutomatico==true){
-      if(this.eventoManual == true){
-      this.comun.controlmanual(message, true, this.flagComienzoGrabacion, this.tituloGrabacion);
+      if(this.eventoIzquierda == true){
+      this.comun.controlmanual(message, true, false, this.flagComienzoGrabacion, this.tituloGrabacion);
       this.eventoManual=false;
-    }else{
-      this.comun.controlmanual(message, false, this.flagComienzoGrabacion, this.tituloGrabacion);
+      this.eventoIzquierda = false;
+    }else if(this.eventoDerecha == true){
+      this.comun.controlmanual(message, false, true, this.flagComienzoGrabacion, this.tituloGrabacion);
+      this.eventoManual=false;
+      this.eventoDerecha = false;
+    }
+    else{
+      this.comun.controlmanual(message, false, false, this.flagComienzoGrabacion, this.tituloGrabacion);
       this.eventoManual=false;
     }
       this.flagComienzoGrabacion=false;
@@ -258,9 +266,15 @@ export class ManualPage implements OnInit {
 
   }
 
-  eventomanual(){
+  eventomanual(lado){
     this.eventoManual = true;
-    this.sendMessage("e");
+    if(lado == "i"){
+      this.eventoIzquierda = true;
+      this.sendMessage("i");
+    }else if(lado == "d"){
+      this.eventoDerecha = true;
+      this.sendMessage("d");
+    }
   }
 
 

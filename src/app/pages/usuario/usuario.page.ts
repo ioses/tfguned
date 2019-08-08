@@ -21,7 +21,8 @@ export class UsuarioPage implements OnInit {
 
   ngOnInit() {
 
-  this.firebase.getUser();
+ // this.firebase.getUser();
+ this.getUserData();
     
   }
 

@@ -70,11 +70,17 @@
   
        <ion-row>
       <ion-col>
-        <ion-button expand="block" shape="round" clear color="red" (click) = "eventomanual()" 
+        <ion-button expand="block" shape="round" clear color="red" (click) = "eventomanual('i')" 
         style="margin-top: 20px;" [disabled]="!flagCalibracionRealizada">
-            EVENTO 
+            IZQUIERDA 
         </ion-button>
       </ion-col>
+      <ion-col>
+          <ion-button expand="block" shape="round" clear color="red" (click) = "eventomanual('d')" 
+          style="margin-top: 20px;" [disabled]="!flagCalibracionRealizada">
+              DERECHA 
+          </ion-button>
+        </ion-col>
     </ion-row>
   
     <ion-row>

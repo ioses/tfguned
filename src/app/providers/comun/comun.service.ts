@@ -33,7 +33,8 @@ export class ComunService{
     private y2=0;
     private z2=0;
 
-    eventoAutomatico = false;
+    eventoIzquierda = false;
+    eventoDerecha = false;
     contadorEventosAutomaticos = 0;
 
     constructor(    
@@ -103,29 +104,39 @@ export class ComunService{
 
         if( this.x1 > sensibilidad || this.x1<-(sensibilidad) ||
             this.y1 > sensibilidad || this.y1<-(sensibilidad) ||
-            this.z1 > sensibilidad || this.z1<-(sensibilidad) ||
+            this.z1 > sensibilidad || this.z1<-(sensibilidad)
+             ){
+                this.eventoIzquierda=true;
+        } else if(            
             this.x2 > sensibilidad || this.x2<-(sensibilidad) ||
             this.y2 > sensibilidad || this.y2<-(sensibilidad) ||
-            this.z2 > sensibilidad || this.z2<-(sensibilidad) ){
-                this.eventoAutomatico=true;
-        } 
+            this.z2 > sensibilidad || this.z2<-(sensibilidad)){
+
+                this.eventoDerecha=true;
+        }
 
         if (nuevaGrabacion == true){
-            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, true, "automatico");
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false, textoControl, true, "automatico");
 
         }else{
-            if(this.eventoAutomatico == true && this.contadorEventosAutomaticos ==3){
-                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, textoControl, false, "automatico");
-                this.contadorEventosAutomaticos=0;
-                this.eventoAutomatico=false;
-                
+            if((this.eventoIzquierda == true || this.eventoDerecha == true) && this.contadorEventosAutomaticos ==3){
+                if(this.eventoIzquierda== true){
+                    this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, false, textoControl, false, "automatico");
+                    this.contadorEventosAutomaticos=0;
+                    this.eventoIzquierda=false;    
+                }else if( this.eventoDerecha == true){
+                    this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2,false, true, textoControl, false, "automatico");
+                    this.contadorEventosAutomaticos=0;
+                    this.eventoDerecha = false;
+                }
             }else{
-                if(this.eventoAutomatico == true && this.contadorEventosAutomaticos<3){
-                   this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "automatico");
+                if((this.eventoIzquierda == true || this.eventoDerecha == true) && this.contadorEventosAutomaticos<3){
+                   this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false, textoControl, false, "automatico");
                     this.contadorEventosAutomaticos++;
                 }else{
-                    this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "automatico");
-                    this.eventoAutomatico=false;
+                    this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false, textoControl, false, "automatico");
+                    this.eventoDerecha=false;
+                    this.eventoIzquierda=false;
 
                 }
             }
@@ -135,7 +146,7 @@ export class ComunService{
     }
 
     
-    controlmanual(data, evento, nuevaGrabacion, textoControl){
+    controlmanual(data, eventoIzquierda, eventoDerecha, nuevaGrabacion, textoControl){
         this.splitCadena(data);
 
         this.x1=this.values[0]-(this.x1calibrado);
@@ -147,23 +158,26 @@ export class ComunService{
 
 
         if (nuevaGrabacion == true){
-            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, true, "manual");
+            this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false, textoControl, true, "manual");
            // this.newRecord = false;
         }else{
-            if(evento == true){
-                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, textoControl, false, "manual");
-            }else{
-                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, textoControl, false, "manual");
+            if(eventoIzquierda == true){
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, true, false, textoControl, false, "manual");
+            }else if(eventoDerecha == true){
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, true, textoControl, false, "manual");
+            }
+            else{
+                this.firebase.post(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, false, false, textoControl, false, "manual");
             }
             
         }
 
     }
-
+/*
     getEventoAutomatico(){
         return this.eventoAutomatico;
     }
-
+*/
 
 
     splitCadena(data){
