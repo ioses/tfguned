@@ -9,8 +9,9 @@
   </ion-item>
 
   <ion-item text-center no-lines>
-    <h1>Feedly</h1>
-    <h6>an app for continuous feed</h6>
+    <ion-label>
+      <h1>Corrector postural</h1>
+  </ion-label>
   </ion-item>
 
   <ion-grid style="width: 75%;">
@@ -29,14 +30,16 @@
       <ion-input type="password" placeholder="your password" [(ngModel)]="password"></ion-input>
     </ion-row>
 
-    <ion-row>
-      <button ion-button block round outline color="light"
-      style="margin-top: 20px;" (click)="signup()">Sign up</button>
-    </ion-row>
-
 </ion-grid>
 
-<button ion-button block clear color="light" (click)="goBack()">
-  Already have an account? Log in
-</button>
+<ion-button expand="block" shape="round" clear color="red" (click)="signup()" style="margin-top: 20px;">
+  Regístrate
+</ion-button>
+
+<ion-button expand="block" shape="round" clear color="red" (click)="goBack()" style="margin-top: 20px;">
+  ¿Ya tienes una cuenta? Entra
+</ion-button>
 </ion-content>
+
+
+
